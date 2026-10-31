@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import { ok } from './lib/response.js';
 import { errorHandler, NotFoundError } from './middleware/errorHandler.js';
+import { authRouter } from './modules/auth/auth.routes.js';
 
 export function createApp(): Express {
   const app = express();
@@ -43,6 +44,9 @@ export function createApp(): Express {
     });
   });
 
+  // Auth routes
+  v1Router.use('/auth', authRouter);
+
   app.use('/api/v1', v1Router);
 
   // 404 handler for unknown routes
@@ -58,4 +62,3 @@ export function createApp(): Express {
 
 export const app = createApp();
 export default app;
-
