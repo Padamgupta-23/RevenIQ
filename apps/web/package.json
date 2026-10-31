@@ -1,5 +1,5 @@
 {
-  "name": "@brightloop/web",
+  "name": "@reveniq/web",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -33,3 +33,4 @@
     "vite": "^5.4.10"
   }
 }
+

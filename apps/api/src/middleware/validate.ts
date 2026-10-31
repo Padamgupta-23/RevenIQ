@@ -35,3 +35,4 @@ export function validate(schemaOrSchemas: ZodTypeAny | ValidationSchemas) {
     }
   };
 }
+

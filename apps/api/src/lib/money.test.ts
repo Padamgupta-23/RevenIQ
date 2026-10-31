@@ -43,3 +43,4 @@ describe('money lib', () => {
     expect(() => divide('100', 0)).toThrow('Division by zero');
   });
 });
+

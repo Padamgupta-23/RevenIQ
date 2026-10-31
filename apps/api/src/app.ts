@@ -38,7 +38,7 @@ export function createApp(): Express {
   v1Router.get('/health', (_req: Request, res: Response) => {
     ok(res, {
       status: 'ok',
-      service: 'brightloop-api',
+      service: 'reveniq-api',
       timestamp: new Date().toISOString(),
     });
   });
@@ -58,3 +58,4 @@ export function createApp(): Express {
 
 export const app = createApp();
 export default app;
+

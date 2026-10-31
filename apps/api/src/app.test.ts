@@ -12,7 +12,7 @@ describe('API Health and Core Middleware', () => {
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('data');
     expect(res.body.data.status).toBe('ok');
-    expect(res.body.data.service).toBe('brightloop-api');
+    expect(res.body.data.service).toBe('reveniq-api');
     expect(res.body.data).toHaveProperty('timestamp');
   });
 
@@ -61,3 +61,4 @@ describe('API Health and Core Middleware', () => {
     expect(res.body.error.message).toBe('Cannot transition from DRAFT to CLOSED');
   });
 });
+

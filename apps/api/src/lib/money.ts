@@ -87,3 +87,4 @@ export function isLessThan(a: DecimalValue, b: DecimalValue): boolean {
 export function isPositive(value: DecimalValue): boolean {
   return toDecimal(value).greaterThan(0);
 }
+

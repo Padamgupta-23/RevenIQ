@@ -34,3 +34,4 @@ export async function nextNumber(
   const numberStr = String(counter.value).padStart(6, '0');
   return `${prefix}-${numberStr}`;
 }
+

@@ -33,11 +33,14 @@ function HomePage() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-slate-900">
       <div className="max-w-md w-full bg-white rounded-xl shadow-md p-8 border border-slate-200">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 mb-2">
-          Brightloop Software
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 mb-1">
+          RevenIQ
         </h1>
+        <p className="text-sm font-medium text-primary mb-2">
+          Revenue Intelligence and Subscription Management
+        </p>
         <p className="text-sm text-slate-600 mb-6">
-          Subscription Management System Monorepo is up and running.
+          RevenIQ Monorepo is up and running.
         </p>
 
         <div className="bg-slate-100 rounded-lg p-4 mb-6">
@@ -68,3 +71,4 @@ export default function App() {
     </QueryClientProvider>
   );
 }
+

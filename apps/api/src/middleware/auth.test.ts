@@ -14,12 +14,12 @@ describe('auth middleware', () => {
   beforeEach(async () => {
     // Clear and create test users
     await prisma.user.deleteMany({
-      where: { email: { in: ['test-active@brightloop.test', 'test-inactive@brightloop.test'] } },
+      where: { email: { in: ['test-active@reveniq.test', 'test-inactive@reveniq.test'] } },
     });
 
     const activeUser = await prisma.user.create({
       data: {
-        email: 'test-active@brightloop.test',
+        email: 'test-active@reveniq.test',
         passwordHash: 'dummy-hash',
         name: 'Active Staff',
         role: Role.STAFF,
@@ -30,7 +30,7 @@ describe('auth middleware', () => {
 
     const inactiveUser = await prisma.user.create({
       data: {
-        email: 'test-inactive@brightloop.test',
+        email: 'test-inactive@reveniq.test',
         passwordHash: 'dummy-hash',
         name: 'Inactive User',
         role: Role.CUSTOMER,
@@ -73,7 +73,7 @@ describe('auth middleware', () => {
     const token = signToken({
       userId: activeUserId,
       role: Role.STAFF,
-      email: 'test-active@brightloop.test',
+      email: 'test-active@reveniq.test',
     });
 
     const res = await request(testApp)
@@ -84,7 +84,7 @@ describe('auth middleware', () => {
     expect(res.body.user).toEqual({
       id: activeUserId,
       role: Role.STAFF,
-      email: 'test-active@brightloop.test',
+      email: 'test-active@reveniq.test',
     });
   });
 
@@ -93,7 +93,7 @@ describe('auth middleware', () => {
     const token = signToken({
       userId: inactiveUserId,
       role: Role.CUSTOMER,
-      email: 'test-inactive@brightloop.test',
+      email: 'test-inactive@reveniq.test',
     });
 
     const res = await request(testApp)
@@ -110,7 +110,7 @@ describe('auth middleware', () => {
     const token = signToken({
       userId: activeUserId,
       role: Role.STAFF,
-      email: 'test-active@brightloop.test',
+      email: 'test-active@reveniq.test',
     });
 
     // Staff allowed
@@ -127,3 +127,4 @@ describe('auth middleware', () => {
     expect(resForbidden.body.error.code).toBe('FORBIDDEN');
   });
 });
+

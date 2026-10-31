@@ -1,4 +1,4 @@
-// Subscription Management System - Prisma schema (PostgreSQL)
+// RevenIQ : Revenue Intelligence and Subscription Management - Prisma schema (PostgreSQL)
 // Money: Decimal(12,2). Percent rates: Decimal(5,2) (e.g. 18.00 = 18%).
 
 generator client {
