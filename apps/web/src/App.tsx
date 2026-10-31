@@ -18,30 +18,16 @@ import { PlansPage } from './features/catalog/PlansPage';
 import { TaxesPage } from './features/catalog/TaxesPage';
 import { DiscountsPage } from './features/catalog/DiscountsPage';
 import { TemplatesPage } from './features/catalog/TemplatesPage';
+import { SubscriptionsPage } from './features/subscriptions/SubscriptionsPage';
+import { SubscriptionDetailPage } from './features/subscriptions/SubscriptionDetailPage';
+import { InvoicesPage } from './features/invoices/InvoicesPage';
+import { InvoiceDetailPage } from './features/invoices/InvoiceDetailPage';
+import { PaymentsPage } from './features/payments/PaymentsPage';
+import { ReportsDashboardPage } from './features/reports/ReportsDashboardPage';
+import { PortalSubscriptionsPage } from './features/portal/PortalSubscriptionsPage';
+import { PortalInvoicesPage } from './features/portal/PortalInvoicesPage';
 
 const queryClient = new QueryClient();
-
-function ModulePlaceholder({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
-  return (
-    <div className="space-y-4">
-      <div className="border-b border-cream-200 pb-4">
-        <h2 className="text-2xl font-serif font-bold text-foreground">{title}</h2>
-        <p className="text-sm text-muted-foreground">{description}</p>
-      </div>
-      <div className="p-12 text-center border-2 border-dashed border-cream-300 rounded-xl bg-white/50">
-        <p className="text-sm font-medium text-muted-foreground">
-          {title} module ready for person assignment per AGENTS.md.
-        </p>
-      </div>
-    </div>
-  );
-}
 
 export default function App() {
   return (
@@ -76,7 +62,7 @@ export default function App() {
                 }
               />
 
-              {/* Module routes */}
+              {/* Catalog & Admin Modules */}
               <Route
                 path="/customers"
                 element={
@@ -137,41 +123,58 @@ export default function App() {
                   </ProtectedRoute>
                 }
               />
+
+              {/* Subscriptions */}
               <Route
                 path="/subscriptions"
                 element={
                   <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
                     <AppShell>
-                      <ModulePlaceholder
-                        title="Subscriptions"
-                        description="Manage active contracts, pause, resume, close, and renew transitions."
-                      />
+                      <SubscriptionsPage />
                     </AppShell>
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/subscriptions/:id"
+                element={
+                  <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
+                    <AppShell>
+                      <SubscriptionDetailPage />
+                    </AppShell>
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Invoices */}
               <Route
                 path="/invoices"
                 element={
                   <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
                     <AppShell>
-                      <ModulePlaceholder
-                        title="Invoices & Billing"
-                        description="Recurring invoices, payment terms, and automated overdue tracking."
-                      />
+                      <InvoicesPage />
                     </AppShell>
                   </ProtectedRoute>
                 }
               />
               <Route
+                path="/invoices/:id"
+                element={
+                  <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
+                    <AppShell>
+                      <InvoiceDetailPage />
+                    </AppShell>
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Payments & Finance Reports */}
+              <Route
                 path="/payments"
                 element={
                   <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
                     <AppShell>
-                      <ModulePlaceholder
-                        title="Payments"
-                        description="Record and reconcile customer payments against invoices."
-                      />
+                      <PaymentsPage />
                     </AppShell>
                   </ProtectedRoute>
                 }
@@ -181,14 +184,13 @@ export default function App() {
                 element={
                   <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
                     <AppShell>
-                      <ModulePlaceholder
-                        title="Finance Reports & Analytics"
-                        description="MRR metrics, overdue aging, and monthly revenue collection charts."
-                      />
+                      <ReportsDashboardPage />
                     </AppShell>
                   </ProtectedRoute>
                 }
               />
+
+              {/* User Admin */}
               <Route
                 path="/users"
                 element={
@@ -200,16 +202,13 @@ export default function App() {
                 }
               />
 
-              {/* Portal Routes for CUSTOMER */}
+              {/* Customer Portal */}
               <Route
                 path="/portal/subscriptions"
                 element={
                   <ProtectedRoute allowedRoles={['CUSTOMER']}>
                     <AppShell>
-                      <ModulePlaceholder
-                        title="My Subscriptions"
-                        description="View and manage your active subscriptions and renewals."
-                      />
+                      <PortalSubscriptionsPage />
                     </AppShell>
                   </ProtectedRoute>
                 }
@@ -219,10 +218,7 @@ export default function App() {
                 element={
                   <ProtectedRoute allowedRoles={['CUSTOMER']}>
                     <AppShell>
-                      <ModulePlaceholder
-                        title="My Invoices"
-                        description="Review past invoices, receipts, and payment confirmations."
-                      />
+                      <PortalInvoicesPage />
                     </AppShell>
                   </ProtectedRoute>
                 }

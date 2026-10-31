@@ -12,6 +12,12 @@ import { productsRouter } from './modules/products/products.routes.js';
 import { plansRouter } from './modules/plans/plans.routes.js';
 import { discountsRouter } from './modules/discounts/discounts.routes.js';
 import { templatesRouter } from './modules/templates/templates.routes.js';
+import { subscriptionsRouter } from './modules/subscriptions/subscriptions.routes.js';
+import { billingRouter } from './modules/billing/billing.routes.js';
+import { invoicesRouter } from './modules/invoices/invoices.routes.js';
+import { paymentsRouter } from './modules/payments/payments.routes.js';
+import { reportsRouter } from './modules/reports/reports.routes.js';
+import { portalRouter } from './modules/portal/portal.routes.js';
 
 export function createApp(): Express {
   const app = express();
@@ -63,6 +69,16 @@ export function createApp(): Express {
   v1Router.use('/discounts', discountsRouter);
   v1Router.use('/templates', templatesRouter);
 
+  // Subscriptions & Recurring Billing (Person 3)
+  v1Router.use('/subscriptions', subscriptionsRouter);
+  v1Router.use('/billing', billingRouter);
+  v1Router.use('/invoices', invoicesRouter);
+
+  // Payments & Finance Reports (Person 4)
+  v1Router.use('/payments', paymentsRouter);
+  v1Router.use('/reports', reportsRouter);
+  v1Router.use('/portal', portalRouter);
+
   app.use('/api/v1', v1Router);
 
   // 404 handler for unknown routes
@@ -77,4 +93,3 @@ export function createApp(): Express {
 }
 
 export const app = createApp();
-

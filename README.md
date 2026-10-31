@@ -353,6 +353,59 @@ Base URL: `/api/v1` (All payloads use `application/json` with ISO 8601 UTC times
 
 ---
 
+## 11. 3-Minute Live Presentation Walkthrough Script
+
+A complete, timed script for demoing RevenIQ from start to finish. See also [`DEMO_SCRIPT.md`](file:///c:/Users/offic/Desktop/Subscription_Management_System/DEMO_SCRIPT.md).
+
+```
+0:00 - 0:20 | 1. Customer Signup & Security Checklist
+  - Navigate to http://localhost:5173/signup
+  - Demonstrate live password validation checklist (length > 8, upper, lower, special).
+  - Register new customer "Sarah Connor" (sarah@cyberdyne.test).
+  - Note: Public signup automatically assigns the CUSTOMER role and sets an httpOnly session cookie.
+
+0:20 - 0:45 | 2. Admin Login & Catalog Configuration
+  - Log in as admin@reveniq.test.
+  - Navigate to Products: show product variants (e.g. Brand = Odoo adds +$560.00).
+  - Navigate to Plans: show policy flags (pausable, closable, renewable, autoClose).
+  - Navigate to Discounts: show percentage coupon with atomic usage limits and live progress bar.
+
+0:45 - 1:15 | 3. Instant Quotation from Template & Lifecycle Activation
+  - Navigate to Subscriptions: click "Create from Template".
+  - Select "Enterprise Cloud Suite" template.
+  - Review pre-loaded lines, automated tax snapshotting (GST 18%), and subtotal.
+  - Step through lifecycle stepper: Draft -> Send Quotation -> Confirm -> Activate.
+  - Show that activation sets nextBillingDate = startDate automatically.
+
+1:15 - 1:45 | 4. Automated Recurring Billing Run Engine
+  - Navigate to Invoices: click "Run Billing Engine" (or POST /api/v1/billing/run).
+  - Engine detects due subscriptions, evaluates multi-period catch-up loops, and applies valid discounts.
+  - Demonstrates idempotency: running twice produces 0 duplicate invoices (backed by unique constraint).
+  - View generated invoice: verify snapshotted tax breakdown, applied discount row, and due date.
+
+1:45 - 2:10 | 5. Invoice Review, Email Dispatch & Payment Settlement
+  - Open generated invoice INV-000001: click "Send Email" to simulate mailer dispatch.
+  - Click "Print Invoice" to view the clean, styled HTML printable receipt.
+  - Click "Record Payment": enter amount, select "CARD" method.
+  - Show PostgreSQL row lock execution: amountPaid updates and invoice automatically marks "PAID".
+
+2:10 - 2:35 | 6. Live Financial Intelligence & MRR Analytics
+  - Navigate to Finance Dashboard: observe real-time KPI updates.
+  - Point out normalized MRR ($409k+), total revenue collected, and overdue receivables.
+  - Interact with the Recharts revenue-by-month bar visualization.
+  - Inspect aged overdue accounts with customer contact information.
+  - Highlight sub-100ms response time backed by pure SQL aggregates.
+
+2:35 - 3:00 | 7. Customer Self-Service Portal & Tenant Isolation
+  - Log out and log in as customer@reveniq.test.
+  - Navigate to "My Subscriptions": view active contracts.
+  - Click "Pause Subscription": succeeds because plan has pausable = true.
+  - Navigate to "My Invoices": view personal invoices and print receipt.
+  - Highlight customer data isolation: attempts to access administrative routes or foreign IDs return 404.
+```
+
+---
+
 ## 12. Definition of Done Checklist
 
 - [x] Monorepo structure with `@reveniq/api` and `@reveniq/web`.

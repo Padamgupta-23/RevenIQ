@@ -1,7 +1,10 @@
 import { useAuth } from '@/lib/auth-context';
+import { useQuery } from '@tanstack/react-query';
+import apiClient from '@/lib/api';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 import {
   TrendingUp,
   CreditCard,
@@ -13,12 +16,45 @@ import {
   ShieldCheck,
   Calendar,
   Layers,
+  Database,
+  ArrowRight,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+interface DashboardSummary {
+  activeSubscriptionsCount: number;
+  totalRevenue: string;
+  invoicesCount: number;
+  overdueBalance: string;
+  overdueCount: number;
+  mrr: string;
+  customersCount?: number;
+  recentInvoices: {
+    id: string;
+    number: string;
+    customerName: string;
+    total: string;
+    status: 'DRAFT' | 'CONFIRMED' | 'PAID' | 'CANCELLED';
+    dueDate: string;
+    isOverdue: boolean;
+  }[];
+}
 
 export function DashboardPage() {
   const { user } = useAuth();
   const role = user?.role || 'CUSTOMER';
+
+  // Fetch live aggregated data from database
+  const { data: summaryData, isLoading } = useQuery<{ data: DashboardSummary }>({
+    queryKey: ['dashboard-summary'],
+    queryFn: async () => {
+      const res = await apiClient.get('/reports/summary');
+      return res.data;
+    },
+    refetchInterval: 30000,
+  });
+
+  const summary = summaryData?.data;
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
@@ -87,7 +123,7 @@ export function DashboardPage() {
         </div>
       </div>
 
-      {/* KPI Cards */}
+      {/* KPI Cards (Powered directly by Database) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <Card className="border border-cream-300 bg-white shadow-sm hover:border-olive-300 transition-colors">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -100,10 +136,10 @@ export function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-olive-950">
-              {role === 'CUSTOMER' ? '1' : '24'}
+              {isLoading ? '...' : summary?.activeSubscriptionsCount ?? 0}
             </div>
             <p className="text-xs text-olive-700 font-semibold flex items-center gap-1.5 mt-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-olive-600" /> Active &amp; in good standing
+              <CheckCircle2 className="w-3.5 h-3.5 text-olive-600" /> Active contracts in database
             </p>
           </CardContent>
         </Card>
@@ -119,10 +155,15 @@ export function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-olive-950">
-              {role === 'CUSTOMER' ? '$1,450.00' : '$28,450.00'}
+              {isLoading
+                ? '...'
+                : role === 'CUSTOMER'
+                ? `$${summary?.totalRevenue || '0.00'}`
+                : `$${summary?.mrr || '0.00'}`}
             </div>
             <p className="text-xs text-olive-700 font-semibold flex items-center gap-1 mt-1.5">
-              <ArrowUpRight className="w-3.5 h-3.5 text-olive-600" /> Normalized billing schedule
+              <ArrowUpRight className="w-3.5 h-3.5 text-olive-600" />
+              {role === 'CUSTOMER' ? 'Total payments settled' : 'Normalized recurring run rate'}
             </p>
           </CardContent>
         </Card>
@@ -130,7 +171,7 @@ export function DashboardPage() {
         <Card className="border border-cream-300 bg-white shadow-sm hover:border-olive-300 transition-colors">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-xs font-bold uppercase tracking-wider text-olive-900/80">
-              Invoices
+              Total Invoices
             </CardTitle>
             <div className="w-9 h-9 rounded-lg bg-olive-100 border border-olive-200 text-olive-800 flex items-center justify-center">
               <CreditCard className="w-4.5 h-4.5" />
@@ -138,10 +179,10 @@ export function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-olive-950">
-              {role === 'CUSTOMER' ? '3' : '142'}
+              {isLoading ? '...' : summary?.invoicesCount ?? 0}
             </div>
             <p className="text-xs text-olive-700 font-semibold flex items-center gap-1 mt-1.5">
-              <Calendar className="w-3.5 h-3.5 text-olive-600" /> Current cycle up to date
+              <Calendar className="w-3.5 h-3.5 text-olive-600" /> Cycle records generated
             </p>
           </CardContent>
         </Card>
@@ -156,22 +197,68 @@ export function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-olive-950">$0.00</div>
+            <div className="text-3xl font-bold text-olive-950">
+              {isLoading ? '...' : `$${summary?.overdueBalance || '0.00'}`}
+            </div>
             <p className="text-xs text-olive-700 font-semibold mt-1.5 flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5 text-olive-600" /> Zero outstanding balance
+              <CheckCircle2 className="w-3.5 h-3.5 text-olive-600" />
+              {summary && summary.overdueCount > 0
+                ? `${summary.overdueCount} invoices past due`
+                : 'Zero outstanding arrears'}
             </p>
           </CardContent>
         </Card>
       </div>
 
+      {/* Recent Invoices Live from Database */}
+      {summary && summary.recentInvoices && summary.recentInvoices.length > 0 && (
+        <Card className="border border-cream-300 bg-white shadow-sm">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle className="text-lg font-bold text-olive-950">
+                Recent Invoices
+              </CardTitle>
+              <CardDescription className="text-olive-700 font-normal">
+                Latest billing cycles generated and stored in the database
+              </CardDescription>
+            </div>
+            <Link to={role === 'CUSTOMER' ? '/portal/invoices' : '/invoices'}>
+              <Button variant="ghost" size="sm" className="text-xs text-olive-800 hover:text-olive-950 flex items-center gap-1">
+                View All <ArrowRight className="w-3.5 h-3.5" />
+              </Button>
+            </Link>
+          </CardHeader>
+          <CardContent>
+            <div className="divide-y divide-cream-200">
+              {summary.recentInvoices.map((inv) => (
+                <div key={inv.id} className="py-3 flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-3">
+                    <span className="font-mono font-bold text-olive-900">{inv.number}</span>
+                    <span className="text-xs text-olive-700 hidden sm:inline">&bull; {inv.customerName}</span>
+                    <span className="text-xs text-stone-500">Due {new Date(inv.dueDate).toLocaleDateString()}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="font-semibold text-olive-950">${inv.total}</span>
+                    <StatusBadge
+                      status={inv.isOverdue ? 'OVERDUE' : (inv.status as any)}
+                      label={inv.isOverdue ? 'Overdue' : undefined}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Account Info Card */}
       <Card className="border border-cream-300 bg-white shadow-sm">
         <CardHeader>
           <CardTitle className="text-lg font-bold text-olive-950">
-            Account &amp; Session Details
+            Account &amp; Database Source
           </CardTitle>
           <CardDescription className="text-olive-700 font-normal">
-            Real-time authentication and role privileges for your current session
+            Real-time authentication and database persistence details
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -199,11 +286,11 @@ export function DashboardPage() {
 
             <div className="p-4 rounded-xl bg-cream-50 border border-cream-200">
               <span className="text-xs font-bold uppercase tracking-wider text-olive-800/80 block mb-1">
-                Backend Status
+                Storage &amp; Sync Engine
               </span>
               <span className="inline-flex items-center gap-2 text-xs font-semibold text-olive-900">
-                <span className="w-2.5 h-2.5 rounded-full bg-olive-600 animate-pulse" />
-                Active Session &bull; Secured
+                <Database className="w-4 h-4 text-olive-700" />
+                Live PostgreSQL Database
               </span>
             </div>
           </div>
