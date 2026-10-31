@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './lib/auth-context';
 import { ToastProvider } from './components/ui/toast';
@@ -13,11 +13,21 @@ import { ForbiddenPage } from './pages/ForbiddenPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { UsersPage } from './features/users/UsersPage';
 import { CustomersPage } from './features/users/CustomersPage';
+import { ProductsPage } from './features/catalog/ProductsPage';
+import { PlansPage } from './features/catalog/PlansPage';
+import { TaxesPage } from './features/catalog/TaxesPage';
+import { DiscountsPage } from './features/catalog/DiscountsPage';
+import { TemplatesPage } from './features/catalog/TemplatesPage';
 
 const queryClient = new QueryClient();
 
-// Placeholder module component for other teams to build into
-function ModulePlaceholder({ title, description }: { title: string; description: string }) {
+function ModulePlaceholder({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
   return (
     <div className="space-y-4">
       <div className="border-b border-cream-200 pb-4">
@@ -36,8 +46,8 @@ function ModulePlaceholder({ title, description }: { title: string; description:
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <ToastProvider>
+      <ToastProvider>
+        <AuthProvider>
           <BrowserRouter>
             <Routes>
               {/* Public Auth Routes */}
@@ -66,7 +76,7 @@ export default function App() {
                 }
               />
 
-              {/* Module routes ready for subsequent team phases */}
+              {/* Module routes */}
               <Route
                 path="/customers"
                 element={
@@ -82,10 +92,7 @@ export default function App() {
                 element={
                   <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
                     <AppShell>
-                      <ModulePlaceholder
-                        title="Product Catalog & Variants"
-                        description="Configure product definitions, pricing models, and variants."
-                      />
+                      <ProductsPage />
                     </AppShell>
                   </ProtectedRoute>
                 }
@@ -95,10 +102,7 @@ export default function App() {
                 element={
                   <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
                     <AppShell>
-                      <ModulePlaceholder
-                        title="Subscription Plans"
-                        description="Configure billing cycles, auto-close, renewable, and pausable flags."
-                      />
+                      <PlansPage />
                     </AppShell>
                   </ProtectedRoute>
                 }
@@ -108,10 +112,7 @@ export default function App() {
                 element={
                   <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
                     <AppShell>
-                      <ModulePlaceholder
-                        title="Taxes & Rates"
-                        description="Manage sales tax rates and automatic invoicing snapshots."
-                      />
+                      <TaxesPage />
                     </AppShell>
                   </ProtectedRoute>
                 }
@@ -121,10 +122,7 @@ export default function App() {
                 element={
                   <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
                     <AppShell>
-                      <ModulePlaceholder
-                        title="Discounts & Coupons"
-                        description="Fixed and percentage discount rules with scope and usage limits."
-                      />
+                      <DiscountsPage />
                     </AppShell>
                   </ProtectedRoute>
                 }
@@ -134,10 +132,7 @@ export default function App() {
                 element={
                   <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
                     <AppShell>
-                      <ModulePlaceholder
-                        title="Quotation Templates"
-                        description="Pre-packaged plans and lines for rapid quote generation."
-                      />
+                      <TemplatesPage />
                     </AppShell>
                   </ProtectedRoute>
                 }
@@ -205,7 +200,7 @@ export default function App() {
                 }
               />
 
-              {/* Customer Portal Routes */}
+              {/* Portal Routes for CUSTOMER */}
               <Route
                 path="/portal/subscriptions"
                 element={
@@ -233,13 +228,13 @@ export default function App() {
                 }
               />
 
-              {/* Error Routes */}
+              {/* Error Pages */}
               <Route path="/403" element={<ForbiddenPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </BrowserRouter>
-        </ToastProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </ToastProvider>
     </QueryClientProvider>
   );
 }

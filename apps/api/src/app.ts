@@ -7,6 +7,11 @@ import { ok } from './lib/response.js';
 import { errorHandler, NotFoundError } from './middleware/errorHandler.js';
 import { authRouter } from './modules/auth/auth.routes.js';
 import { usersRouter } from './modules/users/users.routes.js';
+import { taxesRouter } from './modules/taxes/taxes.routes.js';
+import { productsRouter } from './modules/products/products.routes.js';
+import { plansRouter } from './modules/plans/plans.routes.js';
+import { discountsRouter } from './modules/discounts/discounts.routes.js';
+import { templatesRouter } from './modules/templates/templates.routes.js';
 
 export function createApp(): Express {
   const app = express();
@@ -51,6 +56,13 @@ export function createApp(): Express {
   // Users & RBAC routes
   v1Router.use('/users', usersRouter);
 
+  // Catalog routes (Person 2)
+  v1Router.use('/taxes', taxesRouter);
+  v1Router.use('/products', productsRouter);
+  v1Router.use('/plans', plansRouter);
+  v1Router.use('/discounts', discountsRouter);
+  v1Router.use('/templates', templatesRouter);
+
   app.use('/api/v1', v1Router);
 
   // 404 handler for unknown routes
@@ -58,11 +70,11 @@ export function createApp(): Express {
     next(new NotFoundError('API route not found'));
   });
 
-  // Global error handler
+  // Global centralized error handler
   app.use(errorHandler);
 
   return app;
 }
 
 export const app = createApp();
-export default app;
+
