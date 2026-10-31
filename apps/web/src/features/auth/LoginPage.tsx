@@ -34,6 +34,7 @@ export function LoginPage() {
       });
 
       if (res.data?.data?.user) {
+        if (res.data.data.token) { localStorage.setItem('token', res.data.data.token); }
         success('Welcome back', `Signed in as ${res.data.data.user.email}`);
         await refreshUser();
         navigate(from, { replace: true });
@@ -158,4 +159,5 @@ export function LoginPage() {
     </div>
   );
 }
+
 

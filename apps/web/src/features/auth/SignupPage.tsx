@@ -46,6 +46,7 @@ export function SignupPage() {
       });
 
       if (res.data?.data?.user) {
+        if (res.data.data.token) { localStorage.setItem('token', res.data.data.token); }
         success('Account created', 'Welcome to RevenIQ!');
         await refreshUser();
         navigate('/dashboard', { replace: true });

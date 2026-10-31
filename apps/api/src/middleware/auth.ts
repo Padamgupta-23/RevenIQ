@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import { Role } from '@prisma/client';
 import { prisma } from '../lib/prisma.js';
 import { UnauthorizedError, ForbiddenError } from './errorHandler.js';
-import '../types/express.d.ts';
 
 export interface TokenPayload {
   userId?: string;
@@ -104,4 +103,3 @@ export function requireRole(...roles: Role[]) {
     next();
   };
 }
-
