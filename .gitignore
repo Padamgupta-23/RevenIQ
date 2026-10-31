@@ -1,0 +1,8 @@
+node_modules
+dist
+.env
+.env.local
+AGENTS.md
+PROMPTS.md
+coverage
+*.log
