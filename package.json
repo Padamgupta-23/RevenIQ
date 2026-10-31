@@ -12,7 +12,11 @@
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "db:migrate": "prisma migrate dev",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "build": "npm run build --workspaces --if-present",
+    "build:api": "npm run build --workspace=apps/api",
+    "build:web": "npm run build --workspace=apps/web",
+    "start": "npm run start --workspace=apps/api"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
@@ -25,4 +29,3 @@
     "tsx": "^4.19.2"
   }
 }
-

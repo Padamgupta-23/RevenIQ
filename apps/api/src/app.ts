@@ -102,7 +102,9 @@ export function createApp(): Express {
   v1Router.use('/reports', reportsRouter);
   v1Router.use('/portal', portalRouter);
 
+  // Primary contract: base router mounted at /api/v1, plus root alias for convenience
   app.use('/api/v1', v1Router);
+  app.use('/', v1Router);
 
   // 404 handler for unknown routes
   app.use((_req: Request, _res: Response, next) => {
