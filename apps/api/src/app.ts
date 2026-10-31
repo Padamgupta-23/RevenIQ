@@ -26,10 +26,33 @@ export function createApp(): Express {
   app.use(helmet());
 
   // CORS configuration
-  const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+  const configuredOrigins = [
+    process.env.CLIENT_URL,
+    process.env.CORS_ORIGIN,
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:5175',
+    'http://127.0.0.1:5173',
+    'http://127.0.0.1:5174',
+    'http://127.0.0.1:5175',
+  ]
+    .filter(Boolean)
+    .flatMap((url) => (url ? (url as string).split(',').map((s) => s.trim()) : []));
+
   app.use(
     cors({
-      origin: clientUrl,
+      origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+        // allow requests with no origin (like mobile apps, curl, server-to-server)
+        if (!origin) return callback(null, true);
+        if (
+          configuredOrigins.includes(origin) ||
+          /^https:\/\/[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.vercel\.app$/.test(origin) ||
+          (process.env.NODE_ENV !== 'production' && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin))
+        ) {
+          return callback(null, true);
+        }
+        return callback(new Error(`CORS blocked origin: ${origin}`));
+      },
       credentials: true,
     })
   );
