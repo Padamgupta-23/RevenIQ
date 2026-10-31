@@ -182,7 +182,7 @@ export function SignupPage() {
               <Button
                 type="submit"
                 disabled={loading || !isPasswordValid}
-                className="w-full h-11 bg-primary hover:bg-olive-700 text-white font-medium shadow-sm flex items-center justify-center gap-2 disabled:opacity-60"
+                className="w-full h-11 bg-olive-800 hover:bg-olive-900 text-white font-semibold shadow-sm flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 {loading ? (
                   <span className="flex items-center gap-2">
@@ -212,3 +212,4 @@ export function SignupPage() {
     </div>
   );
 }
+

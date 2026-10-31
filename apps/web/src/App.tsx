@@ -11,6 +11,8 @@ import { ResetPasswordPage } from './features/auth/ResetPasswordPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { ForbiddenPage } from './pages/ForbiddenPage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { UsersPage } from './features/users/UsersPage';
+import { CustomersPage } from './features/users/CustomersPage';
 
 const queryClient = new QueryClient();
 
@@ -70,10 +72,7 @@ export default function App() {
                 element={
                   <ProtectedRoute allowedRoles={['ADMIN', 'STAFF']}>
                     <AppShell>
-                      <ModulePlaceholder
-                        title="Customer Management"
-                        description="View, manage and onboard customers across organizations."
-                      />
+                      <CustomersPage />
                     </AppShell>
                   </ProtectedRoute>
                 }
@@ -200,10 +199,7 @@ export default function App() {
                 element={
                   <ProtectedRoute allowedRoles={['ADMIN']}>
                     <AppShell>
-                      <ModulePlaceholder
-                        title="User & Staff Administration"
-                        description="Admin-only member management and staff permission assignments."
-                      />
+                      <UsersPage />
                     </AppShell>
                   </ProtectedRoute>
                 }

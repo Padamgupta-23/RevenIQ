@@ -19,3 +19,4 @@ authRouter.post('/reset-password', validate(resetPasswordSchema), authController
 authRouter.get('/me', requireAuth, authController.getMe);
 
 export default authRouter;
+

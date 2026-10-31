@@ -106,7 +106,7 @@ export function ForgotPasswordPage() {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full h-11 bg-primary hover:bg-olive-700 text-white font-medium shadow-sm"
+                  className="w-full h-11 bg-olive-800 hover:bg-olive-900 text-white font-semibold shadow-sm"
                 >
                   {loading ? 'Sending link...' : 'Send Reset Link'}
                 </Button>
@@ -127,3 +127,4 @@ export function ForgotPasswordPage() {
     </div>
   );
 }
+

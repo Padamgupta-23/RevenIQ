@@ -10,6 +10,7 @@ import {
   ValidationError,
 } from '../../middleware/errorHandler.js';
 import { sendPasswordResetEmail } from '../../lib/mailer.js';
+import { syncUserToSupabase, updateSupabasePassword } from '../../lib/supabase.js';
 import {
   SignupInput,
   LoginInput,
@@ -20,7 +21,7 @@ import {
 export async function signup(input: SignupInput) {
   const email = input.email.toLowerCase().trim();
 
-  // Check if user already exists
+  // Check if user already exists in database
   const existing = await prisma.user.findUnique({
     where: { email },
   });
@@ -56,6 +57,23 @@ export async function signup(input: SignupInput) {
       createdAt: true,
     },
   });
+
+  // Save all user details into Supabase
+  try {
+    if (process.env.NODE_ENV !== 'test') {
+      await syncUserToSupabase({
+        email: user.email,
+        password: input.password,
+        name: user.name,
+        phone: user.phone || undefined,
+        company: user.company || undefined,
+        address: user.address || undefined,
+        role: user.role,
+      });
+    }
+  } catch (err) {
+    console.error('[AuthService] Supabase sync notice:', err);
+  }
 
   const token = signToken({
     userId: user.id,
@@ -191,6 +209,15 @@ export async function resetPassword(input: ResetPasswordInput) {
       },
     });
   });
+
+  // Sync new password to Supabase
+  try {
+    if (process.env.NODE_ENV !== 'test') {
+      await updateSupabasePassword(resetToken.user.email, input.password);
+    }
+  } catch (err) {
+    console.error('[AuthService] Supabase password update notice:', err);
+  }
 
   return { message: 'Password has been reset successfully. You can now log in.' };
 }

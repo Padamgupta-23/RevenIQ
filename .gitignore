@@ -1,9 +1,9 @@
 node_modules
 dist
 .env
-.env.local
+.env.*
+!.env.example
 AGENTS.md
 PROMPTS.md
 coverage
 *.log
-

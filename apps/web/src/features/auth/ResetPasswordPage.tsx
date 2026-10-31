@@ -162,7 +162,7 @@ export function ResetPasswordPage() {
                 <Button
                   type="submit"
                   disabled={loading || !isPasswordValid || !passwordsMatch}
-                  className="w-full h-11 bg-primary hover:bg-olive-700 text-white font-medium shadow-sm flex items-center justify-center gap-2 disabled:opacity-60"
+                  className="w-full h-11 bg-olive-800 hover:bg-olive-900 text-white font-semibold shadow-sm flex items-center justify-center gap-2 disabled:opacity-60"
                 >
                   {loading ? 'Updating Password...' : 'Save New Password'}
                   <ArrowRight className="w-4 h-4 ml-1" />
@@ -184,3 +184,4 @@ export function ResetPasswordPage() {
     </div>
   );
 }
+

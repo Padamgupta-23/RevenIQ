@@ -117,13 +117,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   to={item.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className={cn(
-                    'flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                    'flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm transition-colors',
                     isActive
-                      ? 'bg-olive-50 text-primary font-semibold border border-olive-200/60 shadow-xs'
-                      : 'text-muted-foreground hover:bg-cream-100/70 hover:text-foreground'
+                      ? 'bg-olive-100/90 text-olive-950 font-bold border-2 border-olive-300/80 shadow-2xs'
+                      : 'text-olive-900/75 hover:bg-cream-100 hover:text-olive-950 font-medium'
                   )}
                 >
-                  <Icon className={cn('w-4 h-4', isActive ? 'text-primary' : 'text-muted-foreground')} />
+                  <Icon className={cn('w-4 h-4', isActive ? 'text-olive-800' : 'text-olive-600')} />
                   <span>{item.name}</span>
                 </Link>
               );
@@ -132,15 +132,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* User Card & Logout at bottom of sidebar */}
-        <div className="p-4 border-t border-cream-200 bg-cream-50/50">
+        <div className="p-4 border-t border-cream-200 bg-cream-50/70">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-full bg-olive-200 text-olive-900 font-semibold text-xs flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-full bg-olive-200 border border-olive-300 text-olive-950 font-bold text-xs flex items-center justify-center shrink-0">
                 {user?.name?.[0]?.toUpperCase() || 'U'}
               </div>
               <div className="min-w-0">
-                <p className="text-xs font-semibold text-foreground truncate">{user?.name}</p>
-                <p className="text-[11px] text-muted-foreground truncate">{user?.email}</p>
+                <p className="text-xs font-bold text-olive-950 truncate">{user?.name}</p>
+                <p className="text-[11px] text-olive-800/80 font-medium truncate">{user?.email}</p>
               </div>
             </div>
             <Badge
@@ -157,9 +157,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             variant="ghost"
             size="sm"
             onClick={logout}
-            className="w-full justify-start text-xs text-muted-foreground hover:text-rose-600 hover:bg-rose-50 h-8"
+            className="w-full justify-start text-xs font-semibold text-olive-800 hover:text-rose-700 hover:bg-rose-50/80 h-8 rounded-md"
           >
-            <LogOut className="w-3.5 h-3.5 mr-2" /> Sign Out
+            <LogOut className="w-3.5 h-3.5 mr-2 text-olive-700" /> Sign Out
           </Button>
         </div>
       </aside>
@@ -173,3 +173,4 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
+

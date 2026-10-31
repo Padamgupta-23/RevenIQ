@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import { ok } from './lib/response.js';
 import { errorHandler, NotFoundError } from './middleware/errorHandler.js';
 import { authRouter } from './modules/auth/auth.routes.js';
+import { usersRouter } from './modules/users/users.routes.js';
 
 export function createApp(): Express {
   const app = express();
@@ -46,6 +47,9 @@ export function createApp(): Express {
 
   // Auth routes
   v1Router.use('/auth', authRouter);
+
+  // Users & RBAC routes
+  v1Router.use('/users', usersRouter);
 
   app.use('/api/v1', v1Router);
 
